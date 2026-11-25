@@ -72,7 +72,13 @@ jobs:
           fi
           "$PV" --strictness-level 10 --validate-in-process --output-dir pluginval-logs "${{ steps.art.outputs.vst3 }}"
           if [ "$RUNNER_OS" == "macOS" ]; then
-            "$PV" --strictness-level 10 --validate-in-process --output-dir pluginval-logs "${{ steps.art.outputs.dir }}/AU/Pure Devotion.component"
+            # AUs must be installed and registered before macOS (and pluginval) can see them
+            mkdir -p ~/Library/Audio/Plug-Ins/Components
+            cp -R "${{ steps.art.outputs.dir }}/AU/Pure Devotion.component" ~/Library/Audio/Plug-Ins/Components/
+            killall -9 AudioComponentRegistrar 2>/dev/null || true
+            sleep 5
+            auval -v aumu PDvo Rgun
+            "$PV" --strictness-level 10 --validate-in-process --output-dir pluginval-logs ~/Library/Audio/Plug-Ins/Components/"Pure Devotion.component"
           fi
 
       - name: Export factory wavetables + samples (generated in-house by the engine)
