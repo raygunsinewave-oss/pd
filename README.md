@@ -46,7 +46,7 @@ PresetForge bench
 
 ## CI and release
 
-`.github/workflows/build.yml` builds on `macos-14` and `windows-2022`. It then runs the preset QA smoke test, the VST3 host test and **pluginval at strictness 10** (VST3, plus AU on macOS). It exports content, packages each platform, and zips the results into `PureDevotion_v1.0.zip` (`/macOS/PureDevotion.pkg`, `/Windows/PureDevotion_Setup.exe`).
+`.github/workflows/build.yml` builds on `macos-15` and `windows-2022`. It then runs the preset QA smoke test, the VST3 host test and **pluginval at strictness 10** (VST3, plus AU on macOS). It exports content, packages each platform, and zips the results into `PureDevotion_v1.0.zip` (`/macOS/PureDevotion.pkg`, `/Windows/PureDevotion_Setup.exe`).
 
 Signing and notarisation turn on when these repository secrets are set:
 `MACOS_DEV_ID_APP`, `MACOS_DEV_ID_INSTALLER`, `MACOS_CERT_P12_BASE64`, `MACOS_CERT_PASSWORD`, `NOTARY_APPLE_ID`, `NOTARY_TEAM_ID`, `NOTARY_PASSWORD`, `WIN_CERT_PFX_BASE64`, `WIN_CERT_PASSWORD`. Without them the installers are built unsigned.

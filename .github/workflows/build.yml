@@ -19,14 +19,14 @@ jobs:
       matrix:
         include:
           - name: macOS (Universal)
-            os: macos-14
+            os: macos-15
             pluginval: https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_macOS.zip
           - name: Windows (x64)
             os: windows-2022
             pluginval: https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_Windows.zip
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configure
         shell: bash
@@ -101,12 +101,12 @@ jobs:
           WIN_CERT_PASSWORD: ${{ secrets.WIN_CERT_PASSWORD }}
         run: ./installers/windows/build_installer.ps1 -ArtefactDir "${{ steps.art.outputs.dir }}" -OutDir dist/Windows
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: dist-${{ runner.os }}
           path: dist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always()
         with:
           name: pluginval-${{ runner.os }}
@@ -117,7 +117,7 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: dist
           pattern: dist-*
@@ -125,7 +125,7 @@ jobs:
       - run: |
           cd dist && ls -R
           zip -r ../PureDevotion_v1.0.zip macOS Windows
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: PureDevotion_v1.0
           path: PureDevotion_v1.0.zip
