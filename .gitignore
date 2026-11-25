@@ -1,0 +1,7 @@
+build/
+external/
+content/Wavetables/
+content/Samples/
+dist/
+*.zip
+.DS_Store

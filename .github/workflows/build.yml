@@ -1,0 +1,131 @@
+name: Build, validate, package
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS (Universal)
+            os: macos-14
+            pluginval: https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_macOS.zip
+          - name: Windows (x64)
+            os: windows-2022
+            pluginval: https://github.com/Tracktion/pluginval/releases/download/v1.0.4/pluginval_Windows.zip
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            cmake -B build -G "Visual Studio 17 2022" -A x64
+          else
+            cmake -B build -G Xcode
+          fi
+
+      - name: Build plugin + tools
+        shell: bash
+        run: cmake --build build --config $BUILD_TYPE --parallel --target PureDevotion_VST3 PureDevotion_Standalone PresetForge $([ "$RUNNER_OS" == "macOS" ] && echo PureDevotion_AU)
+
+      - name: Locate artefacts
+        id: art
+        shell: bash
+        run: |
+          ART="build/PureDevotion_artefacts/$BUILD_TYPE"
+          echo "vst3=$ART/VST3/Pure Devotion.vst3" >> $GITHUB_OUTPUT
+          echo "dir=$ART" >> $GITHUB_OUTPUT
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            echo "forge=build/PresetForge_artefacts/$BUILD_TYPE/PresetForge.exe" >> $GITHUB_OUTPUT
+          else
+            echo "forge=build/PresetForge_artefacts/$BUILD_TYPE/PresetForge" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Smoke test (preset QA + VST3 host test)
+        shell: bash
+        run: |
+          "${{ steps.art.outputs.forge }}" generate --out qa_smoke --limit 60
+          "${{ steps.art.outputs.forge }}" host-test --plugin "${{ steps.art.outputs.vst3 }}"
+
+      - name: pluginval (strictness 10)
+        shell: bash
+        run: |
+          curl -sSL -o pluginval.zip "${{ matrix.pluginval }}"
+          7z x -opluginval pluginval.zip > /dev/null
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            PV=pluginval/pluginval.exe
+          else
+            PV=pluginval/pluginval.app/Contents/MacOS/pluginval
+          fi
+          "$PV" --strictness-level 10 --validate-in-process --output-dir pluginval-logs "${{ steps.art.outputs.vst3 }}"
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            "$PV" --strictness-level 10 --validate-in-process --output-dir pluginval-logs "${{ steps.art.outputs.dir }}/AU/Pure Devotion.component"
+          fi
+
+      - name: Export factory wavetables + samples (generated in-house by the engine)
+        shell: bash
+        run: |
+          "${{ steps.art.outputs.forge }}" export-wavetables --out content/Wavetables
+          "${{ steps.art.outputs.forge }}" export-samples --out content/Samples
+
+      - name: Package (macOS .pkg, signed + notarised when secrets are set)
+        if: runner.os == 'macOS'
+        env:
+          DEV_ID_APP: ${{ secrets.MACOS_DEV_ID_APP }}
+          DEV_ID_INSTALLER: ${{ secrets.MACOS_DEV_ID_INSTALLER }}
+          CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+          NOTARY_APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          NOTARY_TEAM_ID: ${{ secrets.NOTARY_TEAM_ID }}
+          NOTARY_PASSWORD: ${{ secrets.NOTARY_PASSWORD }}
+        run: bash installers/macos/build_pkg.sh "${{ steps.art.outputs.dir }}" dist/macOS
+
+      - name: Package (Windows Inno Setup)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          WIN_CERT_PFX_BASE64: ${{ secrets.WIN_CERT_PFX_BASE64 }}
+          WIN_CERT_PASSWORD: ${{ secrets.WIN_CERT_PASSWORD }}
+        run: ./installers/windows/build_installer.ps1 -ArtefactDir "${{ steps.art.outputs.dir }}" -OutDir dist/Windows
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ runner.os }}
+          path: dist
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pluginval-${{ runner.os }}
+          path: pluginval-logs
+
+  release-zip:
+    name: PureDevotion_v1.0.zip
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: dist-*
+          merge-multiple: true
+      - run: |
+          cd dist && ls -R
+          zip -r ../PureDevotion_v1.0.zip macOS Windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PureDevotion_v1.0
+          path: PureDevotion_v1.0.zip

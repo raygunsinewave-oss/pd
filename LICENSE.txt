@@ -1,0 +1,10 @@
+Pure Devotion
+Copyright (c) 2026 Raygun. All rights reserved.
+
+Private, non-distributed build. All wavetables, samples, presets, artwork and
+visualiser scenes are original works created for this product.
+
+Third-party components:
+- JUCE 8 (https://juce.com) - used under the JUCE licence (AGPLv3 or commercial).
+- Roboto Condensed (Apache License 2.0) - assets/fonts/LICENSE-Roboto.txt
+- JetBrains Mono (SIL Open Font License 1.1) - assets/fonts/LICENSE-JetBrainsMono.txt

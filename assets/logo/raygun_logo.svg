@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64">
+  <!-- Raygun: minimal ray-gun glyph firing a waveform beam. Original artwork. -->
+  <g fill="none" stroke="#F3F1EC" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- body -->
+    <path d="M10 22 H52 Q60 22 60 30 Q60 38 52 38 H34 L28 54 H18 L22 38 H10 Q6 38 6 30 Q6 22 10 22 Z"/>
+    <!-- fins -->
+    <path d="M18 22 V14 M28 22 V14 M38 22 V14"/>
+    <!-- emitter ring -->
+    <circle cx="64" cy="30" r="5"/>
+  </g>
+  <!-- waveform beam -->
+  <path d="M72 30 Q78 14 84 30 T96 30 T108 30 T120 30 T132 30 Q137 22 142 30 T152 30 Q155 26 158 30 T164 30 L234 30"
+        fill="none" stroke="#E8492A" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

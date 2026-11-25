@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pure Devotion User Manual</title>
+<style>
+  @font-face { font-family: "RC"; src: url("../assets/fonts/RobotoCondensed-Bold.ttf"); }
+  @font-face { font-family: "JB"; src: url("../assets/fonts/JetBrainsMono-Regular.ttf"); }
+  @page { size: A4; margin: 18mm 16mm; }
+  :root { --ultra:#14245E; --night:#0C1230; --sodium:#E8492A; --tan:#C47A3A; --text:#1c1c22; }
+  body { font-family: Georgia, "Times New Roman", serif; color: var(--text); font-size: 10.5pt; line-height: 1.5; }
+  h1, h2, h3 { font-family: "RC", sans-serif; text-transform: uppercase; letter-spacing: .12em; color: var(--ultra); }
+  h1 { font-size: 30pt; margin: 0; }
+  h2 { font-size: 15pt; border-bottom: 2px solid var(--sodium); padding-bottom: 3px; margin-top: 26px; page-break-after: avoid; }
+  h3 { font-size: 11pt; margin-bottom: 4px; page-break-after: avoid; }
+  code, .mono { font-family: "JB", monospace; font-size: 9pt; }
+  .cover { height: 245mm; background: linear-gradient(var(--ultra), var(--night)); color: #F3F1EC; padding: 40mm 18mm; box-sizing: border-box; page-break-after: always; }
+  .cover h1 { color: #F3F1EC; font-size: 44pt; letter-spacing: .25em; }
+  .cover .by { font-family: "RC"; letter-spacing: .4em; color: var(--sodium); margin-top: 10mm; }
+  .cover p { max-width: 120mm; font-size: 12pt; opacity: .85; }
+  table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 6px 0 10px; }
+  th { background: var(--ultra); color: #fff; font-family: "RC"; letter-spacing: .06em; text-align: left; padding: 4px 6px; }
+  td { border-bottom: 1px solid #ddd; padding: 3px 6px; vertical-align: top; }
+  img { width: 100%; border-radius: 6px; margin: 6px 0; }
+  .box { border-left: 4px solid var(--sodium); background: #fbf1ee; padding: 8px 12px; margin: 10px 0; }
+  .step { counter-increment: step; margin: 6px 0 6px 0; }
+  ol li { margin-bottom: 5px; }
+  .pb { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <h1>Pure<br>Devotion</h1>
+  <div class="by">RAYGUN</div>
+  <p style="margin-top:30mm">Hybrid wavetable synthesizer and semi-modular patching instrument for live performance.</p>
+  <p class="mono">Version 1.0 &middot; VST3 &middot; AU &middot; Standalone &middot; macOS (Universal) &middot; Windows (x64)</p>
+</section>
+
+<h2>Live Performance Quick Start</h2>
+<div class="box">Ten minutes from install to playing a set.</div>
+<ol>
+  <li><b>Load a scene.</b> Open <b>BROWSER</b>, set the bank filter to <i>Bank 4 &mdash; Live / Performance Scenes</i> and double-click a preset. Scene presets ship with four XY snapshots, macros, riser settings and an arp groove.</li>
+  <li><b>Go to PERFORM.</b> Everything you need on stage is on this one page.</li>
+  <li><b>Map your controller.</b> Right-click any knob (start with the 8 macros) and choose <b>MIDI Learn</b>, then move a knob on your controller. The CC number appears on the knob. Mappings survive preset changes.</li>
+  <li><b>Lock what must not move.</b> Right-click a knob and choose <b>Performance lock</b>, or use <b>Locked Params &rarr; Lock all macros</b>. Locked parameters ignore preset loads, so your levels and mappings stay put while you change sounds.</li>
+  <li><b>Morph.</b> Enable <b>Morph</b> and drag the XY pad: the patch blends between scenes A&ndash;D. Capture your own corners with <b>Set A&hellip;D</b>. Map Scene X / Scene Y to a controller for hands-on morphs.</li>
+  <li><b>Build and drop.</b> Choose a length (4/8/16/32 bars) and press <b>ARM BUILD</b>. Filter sweep, noise swell, reverb throw and pitch rise ramp up in time with the host tempo. Press <b>DROP</b> to release: everything snaps back and, with <i>Drop kills tails</i> on, the reverb and delay are cut dead for a clean impact.</li>
+  <li><b>Stutter and tape stop.</b> Hold <b>Stutter</b> to repeat the last division (1/4&ndash;1/64). Hold <b>Tape Stop</b> to wind the output down. Shift-click either button to latch it.</li>
+  <li><b>Grooves.</b> Turn on <b>Arp</b>, pick a groove (2-Step A/B, Garage Shuffle, Breakbeat A/B&hellip;) and set swing between 50% and 75%. <b>Chord</b> plus <b>Learn Chord</b> lets one finger play a full stab.</li>
+  <li><b>Vocal chops.</b> Choose a sample for the chop pad, click pads or play MIDI notes 36&ndash;51 (C2&ndash;D#3) on channel 16. Select a pad to set its pitch and formant independently.</li>
+  <li><b>Big visuals.</b> <b>Visualiser Full Screen</b> fills the window with the Two Dogs scene; click it to return.</li>
+</ol>
+<img src="img/theme0_tab4.png" alt="PERFORM tab">
+
+<h2 class="pb">Overview</h2>
+<p>Pure Devotion is organised into six tabs: <b>OSC</b>, <b>PATCH</b>, <b>FX</b>, <b>MOD</b>, <b>PERFORM</b> and <b>BROWSER</b>. The header shows the current preset with previous/next arrows and A/B compare (<b>A</b>, <b>B</b>, and <b>A&gt;B</b> to copy). The footer has an on-screen keyboard, theme selector, UI scale (75&ndash;200%) and Settings.</p>
+
+<h2>OSC &mdash; Sound Sources</h2>
+<img src="img/theme0_tab0.png" alt="OSC tab">
+<p>Three main oscillators, each with a selectable engine:</p>
+<table>
+<tr><th>Engine</th><th>What it does</th><th>Key controls</th></tr>
+<tr><td>Wavetable</td><td>256-frame band-limited tables, 32 original factory tables plus your own imports.</td><td>Position, Warp mode (Bend +/&minus;, Sync, PWM, Mirror, Quantize, FM&nbsp;&lt;&nbsp;B, RM&nbsp;&lt;&nbsp;C)</td></tr>
+<tr><td>Multisample</td><td>One-shot, loop or <b>Slice</b>. In Slice mode each key from middle C (note 60) upward plays the next slice; the built-in chopper finds transients automatically.</td><td>Sample, Mode, Slice, Position (start)</td></tr>
+<tr><td>Granular</td><td>Up to 24 overlapping grains.</td><td>Position, Density, Size, Spray, Freeze</td></tr>
+<tr><td>Spectral</td><td>Additive resynthesis of the sample's harmonics, with true formant shifting.</td><td>Position, Formant, Spectral Tilt, Freeze</td></tr>
+<tr><td>Analog</td><td>Band-limited saw, pulse, triangle and supersaw with analog drift.</td><td>Shape, Pulse Width / Supersaw spread</td></tr>
+</table>
+<p>Every oscillator has up to 16 unison voices (Detune, Blend, Width, per-voice Drift), level, pan, octave/semitone/fine, a modulatable Pitch Mod (&plusmn;48&nbsp;st) and a route to Filter 1, Filter 2, both, or direct.</p>
+<h3>Wavetable editing and import</h3>
+<p>Drop a .wav onto a display to import it as a wavetable (in Wavetable mode) or as a sample (other modes). 2048-sample frames are read directly; other files are sliced into up to 256 frames. <b>Shift-drag</b> on the display draws into the current frame; right-click &rarr; <i>Normalise + spread</i> blends the drawn frame across neighbouring frames. Right-click also chooses the Two Dogs scene behind that display.</p>
+<h3>Sub, Noise and Filters</h3>
+<p>The sub oscillator (sine, triangle, square; &minus;1/&minus;2 oct) and the texture oscillator (white, pink, vinyl, tape hiss, crowd, rain, cassette flutter, with a colour control) sit alongside. Two filters run in Serial, Parallel or Split (F1 left / F2 right). Types: MG Ladder, Diode, SVF LP/BP/HP/Notch/Peak, Comb +/&minus;, Formant (vowel morph) and the self-oscillating <b>Rave Ladder</b>. Each has pre and post drive, key tracking, envelope amount (Env 2) and Morph (12&rarr;24 dB slope on SVF, vowel on Formant, damping on Comb).</p>
+
+<h2>MOD &mdash; Modulation</h2>
+<img src="img/theme0_tab3.png" alt="MOD tab">
+<p>8 LFOs (sine, triangle, saw, square, S&amp;H, smooth random, drawn; Free, Retrig, One-Shot or Envelope mode; tempo sync, fade-in, per-voice or global), 4 envelopes (ADSR with hold and curve, or MSEG with up to 16 points and a sustain point) and 2 sixteen-step sequencers.</p>
+<p><b>Drag and drop:</b> drag any source chip onto a knob to create a modulation. Orange rings show the range; a white dot shows the live value. Right-click a knob to set amounts or remove routes. The matrix has 64 slots, each with source, destination, amount, curve (linear, exponential, logarithmic, S-curve, stepped, inverted) and an aux source that scales the modulation. Other sources: velocity, note, mod wheel, pitch bend, aftertouch, MPE pressure and timbre, random, expression, macros 1&ndash;8, Patch Out 1&ndash;4, Riser and XY.</p>
+
+<h2>PATCH &mdash; Modular Rack</h2>
+<img src="img/theme0_tab1.png" alt="PATCH tab">
+<p>Drag modules in from the list (or double-click), then drag from an output jack to an input jack. Pull a cable off an input to repatch it. Cables sag, and they glow brighter with signal level. Drag a knob vertically; double-click resets it. Right-click a module for options or to delete it.</p>
+<table>
+<tr><th>Group</th><th>Modules</th></tr>
+<tr><td>Sound</td><td>VCO, VCA, Delay Line, Wavefolder, Bitcrusher, Noise</td></tr>
+<tr><td>Modulation</td><td>LFO, ADSR, S&amp;H, Slew, Turing Machine, Envelope Follower</td></tr>
+<tr><td>Clock / Pitch / Utility</td><td>Clock Div/Mult, Euclidean, Logic (AND/OR/XOR/NAND), Quantizer (6 scales), Mixer, Attenuverter</td></tr>
+<tr><td>Inputs</td><td>MIDI to CV, Macro In</td></tr>
+<tr><td>Synth jacks</td><td><b>Param Out</b> drives any main synth parameter. <b>Param In</b> reads one. <b>Patch Out 1&ndash;4</b> feed the mod matrix. <b>Audio Out</b> mixes into the synth before FX. <b>Synth In</b> taps the synth's output.</td></tr>
+</table>
+<p>Clock inputs left unconnected follow host 16ths, so Euclidean, Turing and S&amp;H modules run in time straight away.</p>
+
+<h2>FX Rack</h2>
+<p>16 effects: Tape, Cassette, Hyper/Dimension chorus, Phaser, Flanger, Plate/Hall reverb, Shimmer, Ping-Pong/Tape/Stereo delay, Multiband OTT, Transient Shaper, Distortion (tube/fold/fuzz/bit, oversampled), Filter, EQ, Sidechain Ducker (internal 4/4 or host sidechain input), Lo-Fi Degrade and Stereo Widener. Drag a row's handle (or use the arrows) to reorder. Each effect runs on bus A or B; the two buses run in parallel and are summed with their own levels.</p>
+
+<h2>Browser</h2>
+<p>2,850 factory presets in four banks: <i>Pure Devotion (2026)</i>, <i>Good Lies (2023)</i>, <i>EPs &amp; Singles</i>, and <i>Live / Performance Scenes</i>. Filter by bank, track, category, genre, mood, type, folder, rating, favourites, MPE, CPU-light and macros-ready. <b>Similar Sound</b> ranks presets by an audio fingerprint taken from a test render. With <b>Audition</b> on, selecting a preset loads it and plays a short note. <b>Save As</b> writes to your user folder (Documents/Raygun/Pure Devotion/User Presets).</p>
+<p>Every factory preset was rendered during production and gain-staged so it neither clips (peak &le; &minus;1.5&nbsp;dBFS) nor sits silent.</p>
+
+<h2>Settings and Performance</h2>
+<table>
+<tr><th>Setting</th><th>Notes</th></tr>
+<tr><td>Oversampling 1&times;/2&times;/4&times;/8&times;</td><td>Oversamples the voice path. Latency is reported to the host.</td></tr>
+<tr><td>Eco mode</td><td>Caps unison at 4 voices, limits spectral partials and disables oversampling.</td></tr>
+<tr><td>MPE</td><td>Per-note pitch bend (&plusmn;48 st), pressure and timbre (CC74) on member channels 2&ndash;16.</td></tr>
+<tr><td>Macros as MIDI CC</td><td>Sends macros 1&ndash;8 out on CC 20&ndash;27.</td></tr>
+<tr><td>Two Dogs visualisers</td><td>On/off, opacity 0&ndash;60%, full-screen scene. Turn them off for zero visualiser CPU.</td></tr>
+<tr><td>Film grain, GPU rendering</td><td>Grain 0&ndash;4%. OpenGL rendering on macOS and Windows.</td></tr>
+</table>
+
+<h2>Preset Format</h2>
+<p>Presets are versioned JSON files (<code>.pdvo</code>). They hold metadata (bank, track, release, category, tags, audio fingerprint), parameters by ID, the mod matrix, MSEG and LFO shapes, the modular patch, scenes and macro names. Older format versions are migrated on load, and parameters a file doesn't mention fall back to their defaults.</p>
+
+<h2>About</h2>
+<p>Pure Devotion is by Raygun. All wavetables, samples, presets, artwork and visualiser scenes were created in-house. No artist endorsement is claimed or implied. Fonts: Roboto Condensed (Apache 2.0) and JetBrains Mono (SIL OFL 1.1). Built with JUCE.</p>
+</body>
+</html>
